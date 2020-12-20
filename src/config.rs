@@ -25,7 +25,7 @@ impl Default for KindlePultConf {
             port: "587".into(),
             username: "user.name".into(),
             password: "your-password".into(),
-            from_mail: "usern.name@gmail.com".into(),
+            from_mail: "user.name@gmail.com".into(),
             to_mail: "ebook-mail@kindle.com".into(),
         }
     }

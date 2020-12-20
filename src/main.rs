@@ -41,19 +41,23 @@ impl GuiField {
 
 struct Gui {
     win: gtk::ApplicationWindow,
+    file_img: gtk::Image,
 }
 
 impl Gui {
     fn new(application: &gtk::Application) -> Self {
-        let win = gtk::ApplicationWindow::new(application);  // some?
+        let win = gtk::ApplicationWindow::new(application);
+        let file_img = gtk::Image::from_icon_name(Some("document-open"), gtk::IconSize::Button);
 
         Self {
             win,
+            file_img
         }
     }
 
     fn build_file_chooser_btn(&self, sender: glib::Sender<Vec<std::path::PathBuf>>) -> gtk::Button {
-        let button = gtk::Button::with_label("Select");
+        let button = gtk::Button::new();
+        button.add(&self.file_img);
 
         // Dialog for getting source files
         let win = &self.win;
