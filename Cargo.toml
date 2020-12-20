@@ -1,0 +1,13 @@
+[package]
+name = "kindle-pult"
+version = "0.1.0"
+authors = ["mr-chrome <giovanni.crisalfi@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+gtk = "0.9.2"
+glib = "0.10.3"
+gio = "0.9.1"
+gdk = "0.13.2"
+serde = { version = "1.0", features = ["derive"] }
+confy = "0.4.0"
