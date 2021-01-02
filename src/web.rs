@@ -7,7 +7,7 @@ extern crate serde;
 extern crate serde_json;
 use serde::{Deserialize};
 
-use crate::cmd::ReadabiliPyCmd;
+use crate::cmd::{ReadabiliPyCmd, ReadabiliPyParser};
 
 error_chain! {
      foreign_links {
@@ -18,11 +18,11 @@ error_chain! {
 
 #[derive(Deserialize, Debug)]
 pub struct Article {
-    title: String,  // The article title
+    title: Option<String>,  // The article title
     byline: Option<String>,  // Author information
-    date: String,
-    content: String,
-    plain_content: String,  // This attempts to retain only the plain text content of the article, while preserving the HTML structure.
+    date: Option<String>,
+    content: Option<String>,
+    plain_content: Option<String>,  // plain text content of the article, preserving the HTML structure
 }
 
 pub fn download_as_epub(target: String) -> Result<Article> {
@@ -30,8 +30,7 @@ pub fn download_as_epub(target: String) -> Result<Article> {
     let tmp_dir = Builder::new().prefix("kindle-pult_").tempdir()?;
     let response = reqwest::blocking::get(&target)?;
 
-    let mut fpath_string = String::from("");
-    let mut fname = std::path::PathBuf::new();
+    let fpath_string: String;
 
     // Set up temp
     let mut dest = {
@@ -55,17 +54,17 @@ pub fn download_as_epub(target: String) -> Result<Article> {
         .expect("Failed to copy HTML file to file");
 
     // Purify HTML
-    let outfpath = tmp_dir.path().join("article.json");
-    let outfpath_string = outfpath.clone().into_os_string().into_string().unwrap();
-    let output = ReadabiliPyCmd::simple_json_from_file(fpath_string, outfpath_string);
-    println!("{}", output);
+    let purifier = ReadabiliPyCmd::new(ReadabiliPyParser::Mozilla);  // Select parser
 
-    // Read the json file to string.
+    let outfpath = tmp_dir.path().join("article.json");  // TODO: use fname
+    let outfpath_string = outfpath.clone().into_os_string().into_string().unwrap();
+    let output = purifier.json_from_file(fpath_string, outfpath_string);
+    println!("{}", output);  // Print to GUI some feedback
+
+    // Read Json, deserialize and print Rust data structure.
     let json_file = fs::File::open(outfpath).expect("file not found");
     let article: Article = serde_json::from_reader(json_file).expect("error while reading json");
-
-    // Deserialize and print Rust data structure.
-    println!("{:#?}", article);
+    println!("{:#?}", article);  // TODO: print to GUI
 
     Ok(article)
 }

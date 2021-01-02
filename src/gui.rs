@@ -11,7 +11,7 @@ use std::collections::HashMap;
 
 use crate::cmd::CalibreCmd;
 use crate::web::download_as_epub;
-use crate::config::KindlePultConf;
+use crate::config::PultConf;
 
 struct CfgField {
     label: gtk::Label,
@@ -87,7 +87,7 @@ impl Gui {
         });
 
         // Reload Conf
-        let cfg = KindlePultConf::reload();
+        let cfg = PultConf::reload();
 
         Self {
             win,
@@ -233,7 +233,7 @@ impl Gui {
         save_button.set_property_expand(false);
 
         save_button.connect_clicked(move |_| {
-            let new_conf = KindlePultConf {
+            let new_conf = PultConf {
                 del_sent: {if del_sent.get_state() { "true".into() } else { "false".into() }},
                 to_ext: flds.to_ext.buffer.get_text(),
                 smtp: flds.smtp.buffer.get_text(),
@@ -245,7 +245,7 @@ impl Gui {
             };
 
             let _ = confy::store("kindle-pult", new_conf);
-            let _ = KindlePultConf::reload();
+            let _ = PultConf::reload();
         });  // Connect clicked button
 
         // btn_box.add(&save_button);

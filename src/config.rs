@@ -3,8 +3,9 @@ use std::collections::HashMap;
 use std::result::Result;
 
 // Config file serialization
+// PultConf is for sending and converting
 #[derive(Serialize, Deserialize, Debug)]
-pub struct KindlePultConf {
+pub struct PultConf {
     pub del_sent: String,
     pub to_ext: String,
     pub smtp: String,
@@ -15,8 +16,8 @@ pub struct KindlePultConf {
     pub to_mail: String,
 }
 
-/// `MyConfig` implements `Default`
-impl Default for KindlePultConf {
+/// `PultConf` implements `Default`
+impl Default for PultConf {
     fn default() -> Self {
         Self {
             del_sent: "false".into(),
@@ -31,7 +32,7 @@ impl Default for KindlePultConf {
     }
 }
 
-impl KindlePultConf {
+impl PultConf {
     fn dump_to_hashmap(&self) -> HashMap<String, String> {
         let mut values = HashMap::new();
         values.insert(String::from("del_sent"), String::from(&self.del_sent));
@@ -48,7 +49,7 @@ impl KindlePultConf {
 
     pub fn reload() -> HashMap<String, String> {
         // Load config file info
-        let confy_loaded: Result<KindlePultConf, confy::ConfyError> = confy::load("kindle-pult");
+        let confy_loaded: Result<PultConf, confy::ConfyError> = confy::load("kindle-pult");
 
         // Reset to default if some error occurs
         let conf_hashmap: HashMap<String, String> = match confy_loaded {
@@ -58,8 +59,8 @@ impl KindlePultConf {
             Err(e) => {
                 println!("{:?}", e);
                 println!("Replacing with default config values and dumping.");
-                let _ = confy::store("kindle-pult", KindlePultConf::default());
-                let default_c: KindlePultConf = confy::load("kindle-pult").unwrap();
+                let _ = confy::store("kindle-pult", PultConf::default());
+                let default_c: PultConf = confy::load("kindle-pult").unwrap();
                 default_c.dump_to_hashmap()
             },
         };

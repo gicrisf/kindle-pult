@@ -4,7 +4,6 @@ use std::collections::HashMap;
 pub struct CalibreCmd {}
 
 impl CalibreCmd {
-
     pub fn convert(file: &str, to_ext: &str) -> String {
         // Use format, more elegance
         let convert_arg = r#"ebook-convert "file" .ext"#;
@@ -54,20 +53,39 @@ impl CalibreCmd {
 
         String::from_utf8_lossy(&output.stdout).to_string()
     }
+}  // CalibreCmd
 
+pub enum ReadabiliPyParser {
+    Python,
+    Mozilla,
 }
 
-pub struct ReadabiliPyCmd {}
+pub struct ReadabiliPyCmd {
+    parser: ReadabiliPyParser,
+}
 
 impl ReadabiliPyCmd {
-    pub fn simple_json_from_file(html_fpath: String, json_fpath: String) -> String {
+    pub fn new(parser: ReadabiliPyParser) -> Self {
+        Self {
+            parser,
+        }
+    }
+
+    pub fn json_from_file(&self, html_fpath: String, json_fpath: String) -> String {
+
+        let parser_arg = match self.parser {
+            ReadabiliPyParser::Python => { "-p" },
+            ReadabiliPyParser::Mozilla => { "" },
+        };
 
         let arg = format!(
-            r#"readabilipy -p -i {in} -o {out}"#,
+            r#"readabilipy {parser} -i {in} -o {out}"#,
+            parser = parser_arg,
             in = html_fpath,
             out = json_fpath,
         );
 
+        // TODO: Add to trait for all commands!
         let output = if cfg!(target_os = "windows") {
             Command::new("cmd").arg("/C").arg(&arg).output()
             .expect("Windows failed to execute send cmd")
