@@ -17,11 +17,17 @@ Kindle-pult is a full Rust/GTK graphical wrapper around Calibre CLI functions, s
 
 Compile it yourself:
 
-`git clone https://github.com/mr-chrome/kindle-pult.git`
+```
+git clone https://github.com/mr-chrome/kindle-pult.git
+```
 
-`cd kindle-pult`
+```
+cd kindle-pult
+```
 
-`cargo build --release`
+```
+cargo build --release
+```
 
 ## TODOs
 

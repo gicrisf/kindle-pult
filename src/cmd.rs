@@ -56,3 +56,26 @@ impl CalibreCmd {
     }
 
 }
+
+pub struct ReadabiliPyCmd {}
+
+impl ReadabiliPyCmd {
+    pub fn simple_json_from_file(html_fpath: String, json_fpath: String) -> String {
+
+        let arg = format!(
+            r#"readabilipy -p -i {in} -o {out}"#,
+            in = html_fpath,
+            out = json_fpath,
+        );
+
+        let output = if cfg!(target_os = "windows") {
+            Command::new("cmd").arg("/C").arg(&arg).output()
+            .expect("Windows failed to execute send cmd")
+        } else {
+            Command::new("sh").arg("-c").arg(&arg).output()
+            .expect("Linux failed to execute send cmd")
+        };
+
+        String::from_utf8_lossy(&output.stdout).to_string()
+    }
+}

@@ -10,4 +10,9 @@ glib = "0.10.3"
 gio = "0.9.1"
 gdk = "0.13.2"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.61"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.10.8", features = ["blocking"] }
 confy = "0.4.0"
+error-chain = "0.12.4"
+tempfile = "3.1.0"
