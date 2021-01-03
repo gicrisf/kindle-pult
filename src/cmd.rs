@@ -5,17 +5,19 @@ pub struct CalibreCmd {}
 
 impl CalibreCmd {
     pub fn convert(file: &str, to_ext: &str) -> String {
-        // Use format, more elegance
-        let convert_arg = r#"ebook-convert "file" .ext"#;
-        let this_convert_arg = convert_arg.replace("file", file);
-        let this_convert_arg = this_convert_arg.replace("ext", to_ext);
+        // TODO: use format, more elegance
+        let convert_arg = format!(
+            r#"ebook-convert "{file}" .{ext}"#,
+            file = file,
+            ext = to_ext,
+        );
 
         println!("***** conversion *****");
         let output = if cfg!(target_os = "windows") {
-            Command::new("cmd").arg("/C").arg(&this_convert_arg).output()
+            Command::new("cmd").arg("/C").arg(&convert_arg).output()
             .expect("Windows failed to execute send cmd")
         } else {
-            Command::new("sh").arg("-c").arg(&this_convert_arg).output()
+            Command::new("sh").arg("-c").arg(&convert_arg).output()
             .expect("Linux failed to execute send cmd")
         };
 
@@ -51,7 +53,10 @@ impl CalibreCmd {
             .expect("Linux failed to execute send cmd")
         };
 
-        String::from_utf8_lossy(&output.stdout).to_string()
+        // Shell output
+        let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+        println!("{}", stdout);
+        stdout
     }
 }  // CalibreCmd
 
@@ -85,7 +90,7 @@ impl ReadabiliPyCmd {
             out = json_fpath,
         );
 
-        // TODO: Add to trait for all commands!
+        // Launch command. TODO: Add to trait for all commands!
         let output = if cfg!(target_os = "windows") {
             Command::new("cmd").arg("/C").arg(&arg).output()
             .expect("Windows failed to execute send cmd")
@@ -94,6 +99,7 @@ impl ReadabiliPyCmd {
             .expect("Linux failed to execute send cmd")
         };
 
+        // Shell output
         String::from_utf8_lossy(&output.stdout).to_string()
     }
 }

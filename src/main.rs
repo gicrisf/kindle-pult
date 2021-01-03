@@ -4,6 +4,9 @@ extern crate gtk;
 use gio::prelude::*;
 use std::env::args;
 
+#[macro_use]
+extern crate error_chain;
+
 mod gui;
 mod web;
 mod cmd;

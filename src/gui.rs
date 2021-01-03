@@ -10,7 +10,7 @@ use std::fs;
 use std::collections::HashMap;
 
 use crate::cmd::CalibreCmd;
-use crate::web::download_as_epub;
+use crate::web::Article;
 use crate::config::PultConf;
 
 struct CfgField {
@@ -154,7 +154,7 @@ impl Gui {
 
         let url_buffer_clone = url_field.buffer.clone();
         download_btn.connect_clicked(move |_| {
-            let _no = download_as_epub(url_buffer_clone.get_text());
+            let _article = Article::get_from_url(url_buffer_clone.get_text());
             // println!("{:?}", no.unwrap());
         });  // Connect clicked button
 

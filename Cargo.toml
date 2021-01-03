@@ -16,3 +16,5 @@ reqwest = { version = "0.10.8", features = ["blocking"] }
 confy = "0.4.0"
 error-chain = "0.12.4"
 tempfile = "3.1.0"
+soup = "0.5.0"
+url = "2.2.0"
