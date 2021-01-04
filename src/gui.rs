@@ -154,7 +154,7 @@ impl Gui {
 
         let url_buffer_clone = url_field.buffer.clone();
         download_btn.connect_clicked(move |_| {
-            let _article = Article::get_from_url(url_buffer_clone.get_text());
+            let _article = Article::epub_from_url(url_buffer_clone.get_text());
             // println!("{:?}", no.unwrap());
         });  // Connect clicked button
 
